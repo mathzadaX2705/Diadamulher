@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feliz Dia Mulher ❤</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #ffe4e1;
+            padding: 50px;
+            overflow: hidden;
+            position: relative;
+            height: 100vh;
+            margin: 0;
+        }
+        h1 {
+            color: #d63384;
+        }
+        .hidden {
+            display: none;
+        }
+        .msg {
+            font-size: 22px;
+            color: #444;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            color: white;
+            background-color: #d63384;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            position: absolute;
+            transition: all 0.2s ease-in-out;
+        }
+        button:hover {
+            background-color: #c2185b;
+        }
+        .hearts {
+            font-size: 40px;
+            color: red;
+            animation: float 1.5s infinite alternate;
+        }
+        @keyframes float {
+            0% { transform: translateY(0); opacity: 0.8; }
+            100% { transform: translateY(-10px); opacity: 1; }
+        }
+        #surprise {
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+        }
+        #surprise.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+        #surprise img {
+            width: 250px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: red;
+            opacity: 0.7;
+            animation: fall 3s linear infinite;
+        }
+        @keyframes fall {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(100vh); }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Feliz Dia da Mulher!🩷</h1>
+    <p>Se acertar o botão, ganha uma surpresa!</p>
+
+    <button id="trickButton">Clique Aqui</button>
+
+    <div id="surprise" class="hidden">
+        <img src="images.jpeg" alt="Imagem Romântica">
+        <p class="msg">Parabéns! Você ganhou um vale-beijo sem data de validade!</p>
+        <p class="hearts">🌹🩷</p>
+        <audio id="loveSong" src="luanmp3_6DTydf54.mp3" preload="auto"></audio>
+    </div>
+
+    <script>
+        let button = document.getElementById("trickButton");
+        let audio = document.getElementById("loveSong");
+        let surprise = document.getElementById("surprise");
+        let attempts = 0;
+
+        // Mantendo 30 tentativas para ambos (PC e celular)
+        let maxAttempts = 25;
+        let moveInterval = 300;  // Aumentei a velocidade, movendo o botão a cada 300ms
+
+        function centerButton() {
+            let screenWidth = window.innerWidth;
+            let screenHeight = window.innerHeight;
+            let buttonWidth = button.offsetWidth;
+            let buttonHeight = button.offsetHeight;
+            let margin = 50;  // A margem que o botão vai respeitar das bordas da tela
+            let centerX = (screenWidth - buttonWidth) / 2;
+            let centerY = (screenHeight - buttonHeight) / 2;
+            button.style.left = centerX + "px";
+            button.style.top = centerY + "px";
+        }
+
+        function moveButton() {
+            if (attempts >= maxAttempts) return;
+            if (navigator.vibrate) navigator.vibrate(100);
+            let screenWidth = window.innerWidth;
+            let screenHeight = window.innerHeight;
+            let buttonWidth = button.offsetWidth;
+            let buttonHeight = button.offsetHeight;
+            
+            // Garantindo que o botão não ultrapasse as bordas da tela
+            let maxX = screenWidth - buttonWidth - 50;  // 50px de margem da borda
+            let maxY = screenHeight - buttonHeight - 50;  // 50px de margem da borda
+
+            let newX = Math.random() * maxX;
+            let newY = Math.random() * maxY;
+
+            button.style.left = newX + "px";
+            button.style.top = newY + "px";
+            attempts++;
+        }
+
+        function createConfetti() {
+            for (let i = 0; i < 30; i++) {
+                let confetti = document.createElement("div");
+                confetti.classList.add("confetti");
+                confetti.style.left = Math.random() * window.innerWidth + "px";
+                confetti.style.backgroundColor = ["red", "pink", "purple"][Math.floor(Math.random() * 3)];
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 3000);
+            }
+        }
+
+        centerButton();
+        setInterval(moveButton, moveInterval);  // O botão agora se move a cada 300ms
+
+        button.addEventListener("click", function() {
+            if (attempts >= maxAttempts) {
+                button.style.display = "none";
+                surprise.classList.remove("hidden");
+                setTimeout(() => surprise.classList.add("show"), 10);
+                audio.play();
+                createConfetti();
+            }
+        });
+
+        window.addEventListener("resize", centerButton);
+    </script>
+
+</body>
+</html>
+
